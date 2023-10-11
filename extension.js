@@ -137,27 +137,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										// alert(oldt);
 										writeFile(fileEntry, dataObj);
 
-										//更新extension.js
-										window.resolveLocalFileSystemURL(
-											lib.assetURL + "extension/" + extName,
-											function (root) {
-												root.getFile(
-													"extension.js",
-													{ create: true },
-													function (fileEntry) {
-														var dataObj = new Blob([text_download], { type: "text/plain" });
-														//写入文件
-														writeFile(fileEntry, dataObj);
-													},
-													function (err) {
-														alert("创建失败!");
-													}
-												);
-											},
-											function (err) {}
-										);
 										
-										alert("更新完成");
 									},
 									function (err) {
 										alert("创建失败!");
@@ -167,6 +147,28 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							function (err) {}
 						);
 					}
+					
+					//更新extension.js
+					window.resolveLocalFileSystemURL(
+						lib.assetURL + "extension/" + extName,
+						function (root) {
+							root.getFile(
+								"extension.js",
+								{ create: true },
+								function (fileEntry) {
+									var dataObj = new Blob([text_download], { type: "text/plain" });
+									//写入文件
+									writeFile(fileEntry, dataObj);
+								},
+								function (err) {
+									alert("创建失败!");
+								}
+							);
+						},
+						function (err) {}
+					);
+					
+					alert("更新完成");
 					
 				},
 				() => {}
