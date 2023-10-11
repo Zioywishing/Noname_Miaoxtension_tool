@@ -2,8 +2,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 	//重置删除扩展的选择
 	lib.config.extension_喵喵配件_extensionDeleter1 = "1";
 
-	
-
 	//改自拓展：《在线更新》
 	function miaoFetch(url, options = { timeout: 3000 }) {
 		return new Promise((resolve, reject) => {
@@ -34,109 +32,136 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 		});
 	}
 
-	/** 检测最快连接到的更新源  */
-	// @ts-ignore
-	function getFastestUpdateURLMiao4(
-		updateURLS = {
-			github: "https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/extension.js"
-		},
-		translate = {
-			coding: "Coding",
-			github: "GitHub",
-			// fastgit: 'GitHub镜像',
-			// xuanwu: '玄武镜像',
-			URC: "URC"
-		}
-	) {
-		// if (typeof updateURLS != "object") throw new TypeError("updateURLS must be an object type");
-		if (typeof translate != "object") throw new TypeError("translate must be an object type");
-		const promises = [];
-		const keys = Object.keys(updateURLS);
-		keys.forEach(key => {
-			const url = updateURLS[key];
-			const start = new Date().getTime();
-			promises.push(
-				miaoFetch(`${url}?date=${new Date().getTime()}`).then(async response => {
-					try {
-						await response.text();
-						const finish = new Date().getTime() - start;
-						return { key, finish };
-					} catch (e) {
-						return {
-							key,
-							err: new Error(e.message)
-						};
-					}
+	// 更新拓展
+	async function miao_update_extension_js(url, extName){
+		// var url = "https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/extension.js";
+		var text_download = "";
+		// var extName = "喵喵喵喵";
+		var path = "\\extension\\" + extName + "\\extension.js";
+		var time = new Date();
+		var path_bak = path + "." + time.valueOf() + ".bak";
+		var fileName = "extension.js";
+		var fileName_bak = fileName + "." + time.valueOf() + ".bak";
+		try {
+			var fec = miaoFetch(url);
+			fec.catch(err => reject(err));
+			await fec
+				.then(data => {
+					return data.text();
 				})
-			);
-		});
-
-		/* Promise.allSettled */
-		function allSettled(array) {
-			return new Promise(resolve => {
-				let args = Array.prototype.slice.call(array);
-				if (args.length === 0) return resolve([]);
-				let arrCount = args.length;
-
-				function resolvePromise(index, value) {
-					if (typeof value === "object") {
-						let then = value.then;
-						if (typeof then === "function") {
-							then.call(
-								value,
-								function (val) {
-									args[index] = { status: "fulfilled", value: val };
-									if (--arrCount === 0) {
-										resolve(args);
-									}
-								},
-								function (e) {
-									args[index] = { status: "rejected", reason: e };
-									if (--arrCount === 0) {
-										resolve(args);
-									}
-								}
-							);
-						}
-					}
-				}
-
-				for (let i = 0; i < args.length; i++) {
-					resolvePromise(i, args[i]);
-				}
-			});
+				.then(res => {
+					text_download = res;
+				});
+		} catch (e) {
+			return alert("连接出了问题喵:" + e);
 		}
+		alert("下载成功");
+		//电脑端node.js环境下
+		if (lib.node && lib.node.fs) {
+			path = __dirname + path;
+			path_bak = __dirname + path_bak;
+			// return alert(path)
+			const fs = lib.node.fs;
+			//创建备份文件
+			try {
+				fs.readFile(path, function read(err, data) {
+					if (err) {
+						throw err;
+					}
+					if(text_download == data){
+						alert('本地和下载的一模一样喵')
+					}else{
+						fs.appendFile(path_bak, data, function (err) {
+							if (err) throw err;
+						});
+					}
+				});
+			} catch (e) {
+				return alert("备份时：" + e);
+			}
+			//更新文件
+			try {
+				fs.writeFileSync(path, text_download);
+			} catch (e) {
+				return alert("更新extension.js时：" + e);
+			}
+		}
+		//移动端
+		else {
 
-		return allSettled(promises).then(values => {
-			const array = values.filter(i => i && !i.reason && !i.value.err);
-			const errArray = values.filter(i => i && (i.reason || i.value.err));
-			if (array.length == 0) {
-				alert("更新源连接全部出错");
-				return {
-					success: [],
-					failed: errArray.map(_ => _.value || _.reason)
-				};
+			//将内容数据写入到文件中
+			function writeFile(fileEntry, dataObj) {
+				//创建一个写入对象
+				fileEntry.createWriter(function (fileWriter) {
+					//文件写入成功
+					fileWriter.onwriteend = function () {
+						// alert("Successful file read...");
+					};
+
+					//文件写入失败
+					fileWriter.onerror = function (e) {
+						alert("Failed file read: " + e.toString());
+					};
+
+					//写入文件
+					fileWriter.write(dataObj);
+				});
 			}
-			const fastest = array.reduce((previous, next) => {
-				const a = previous.value.finish;
-				const b = next.value.finish;
-				return a > b ? next : previous;
-			});
-			function getTranslate(_) {
-				const index = values.findIndex(item => item == _);
-				return translate[keys[index]];
-			}
-			alert(
-				`最快连接到的更新源是：${getTranslate(fastest) || fastest.value.key}, 用时${fastest.value.finish / 1000}秒${
-					errArray.length > 0 ? "\n连接不上的更新源有：" + errArray.map(getTranslate) : ""
-				}`
+
+
+			//备份文件
+			game.readFileAsText(
+				"extension/" + extName + "/extension.js",
+				e => {
+					var oldt = e;
+					if(text_download == data){
+						alert('本地和下载的一模一样喵')
+					}else{
+						window.resolveLocalFileSystemURL(
+							lib.assetURL + "extension/" + extName,
+							function (root) {
+								root.getFile(
+									fileName_bak,
+									{ create: true },
+									function (fileEntry) {
+										var dataObj = new Blob([oldt], { type: "text/plain" });
+										//写入文件
+										// alert(oldt);
+										writeFile(fileEntry, dataObj);
+									},
+									function (err) {
+										alert("创建失败!");
+									}
+								);
+							},
+							function (err) {}
+						);
+					}
+					
+				},
+				() => {}
 			);
-			return {
-				fastest: fastest.value,
-				success: array.map(_ => _.value),
-				failed: errArray.map(_ => _.value || _.reason)
-			};
-		});
+			
+			//更新extension.js
+			window.resolveLocalFileSystemURL(
+				lib.assetURL + "extension/" + extName,
+				function (root) {
+					root.getFile(
+						"extension.js",
+						{ create: true },
+						function (fileEntry) {
+							var dataObj = new Blob([text_download], { type: "text/plain" });
+							//写入文件
+							writeFile(fileEntry, dataObj);
+						},
+						function (err) {
+							alert("创建失败!");
+						}
+					);
+				},
+				function (err) {}
+			);
+		}
 	}
 	// function miaoFetch(url) {
 	// 	var p1 = new Promise((resolve, reject)=>{
@@ -1653,7 +1678,150 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 					
 					alert("更新完成");
-					this.innerHTML = "<button>更新完成</button>";
+					this.innerHTML = "<span><button>更新喵喵喵喵</button></span>";
+				}
+			},
+
+			updateSelf: {
+				name: "<button>更新喵喵配件</button>",
+				intro: "这还用说？？？？",
+				clear: true,
+				onclick: async function () {
+					if (this.innerHTML != "<span><button>更新喵喵配件</button></span>") {
+						return alert("已经在更新了");
+					}
+					this.innerHTML = "<button>更新中</button>";
+					var url = "https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/extension.js";
+					var text_download = "";
+					var extName = "喵喵喵喵";
+					var path = "\\extension\\" + extName + "\\extension.js";
+					var time = new Date();
+					var path_bak = path + "." + time.valueOf() + ".bak";
+					var fileName = "extension.js";
+					var fileName_bak = fileName + "." + time.valueOf() + ".bak";
+					try {
+						var fec = miaoFetch(url);
+						fec.catch(err => reject(err));
+						await fec
+							.then(data => {
+								return data.text();
+							})
+							.then(res => {
+								text_download = res;
+							});
+					} catch (e) {
+						return alert("连接出了问题喵:" + e);
+					}
+					alert("下载成功");
+					//电脑端node.js环境下
+					if (lib.node && lib.node.fs) {
+						path = __dirname + path;
+						path_bak = __dirname + path_bak;
+						// return alert(path)
+						const fs = lib.node.fs;
+						//创建备份文件
+						try {
+							fs.readFile(path, function read(err, data) {
+								if (err) {
+									throw err;
+								}
+								if(text_download == data){
+									alert('本地和下载的一模一样喵')
+								}else{
+									fs.appendFile(path_bak, data, function (err) {
+										if (err) throw err;
+									});
+								}
+							});
+						} catch (e) {
+							return alert("备份时：" + e);
+						}
+						//更新文件
+						try {
+							fs.writeFileSync(path, text_download);
+						} catch (e) {
+							return alert("更新extension.js时：" + e);
+						}
+					}
+					//移动端
+					else {
+
+						//将内容数据写入到文件中
+						function writeFile(fileEntry, dataObj) {
+							//创建一个写入对象
+							fileEntry.createWriter(function (fileWriter) {
+								//文件写入成功
+								fileWriter.onwriteend = function () {
+									// alert("Successful file read...");
+								};
+
+								//文件写入失败
+								fileWriter.onerror = function (e) {
+									alert("Failed file read: " + e.toString());
+								};
+
+								//写入文件
+								fileWriter.write(dataObj);
+							});
+						}
+
+
+						//备份文件
+						game.readFileAsText(
+							"extension/" + extName + "/extension.js",
+							e => {
+								var oldt = e;
+								if(text_download == data){
+									alert('本地和下载的一模一样喵')
+								}else{
+									window.resolveLocalFileSystemURL(
+										lib.assetURL + "extension/" + extName,
+										function (root) {
+											root.getFile(
+												fileName_bak,
+												{ create: true },
+												function (fileEntry) {
+													var dataObj = new Blob([oldt], { type: "text/plain" });
+													//写入文件
+													// alert(oldt);
+													writeFile(fileEntry, dataObj);
+												},
+												function (err) {
+													alert("创建失败!");
+												}
+											);
+										},
+										function (err) {}
+									);
+								}
+								
+							},
+							() => {}
+						);
+						
+						//更新extension.js
+						window.resolveLocalFileSystemURL(
+							lib.assetURL + "extension/" + extName,
+							function (root) {
+								root.getFile(
+									"extension.js",
+									{ create: true },
+									function (fileEntry) {
+										var dataObj = new Blob([text_download], { type: "text/plain" });
+										//写入文件
+										writeFile(fileEntry, dataObj);
+									},
+									function (err) {
+										alert("创建失败!");
+									}
+								);
+							},
+							function (err) {}
+						);
+					}
+					
+					alert("更新完成");
+					this.innerHTML = "<span><button>更新喵喵配件</button></span>";
 				}
 			},
 			// getFastestUpdateURLMiao4:{
