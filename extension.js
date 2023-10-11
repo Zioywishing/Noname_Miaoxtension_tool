@@ -1549,134 +1549,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 					this.innerHTML = "<button>更新中</button>";
 					var url = "https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/extension.js";
-					var text_download = "";
 					var extName = "喵喵喵喵";
-					var path = "\\extension\\" + extName + "\\extension.js";
-					var time = new Date();
-					var path_bak = path + "." + time.valueOf() + ".bak";
-					var fileName = "extension.js";
-					var fileName_bak = fileName + "." + time.valueOf() + ".bak";
-					try {
-						var fec = miaoFetch(url);
-						fec.catch(err => reject(err));
-						await fec
-							.then(data => {
-								return data.text();
-							})
-							.then(res => {
-								text_download = res;
-							});
-					} catch (e) {
-						return alert("连接出了问题喵:" + e);
-					}
-					alert("下载成功");
-					//电脑端node.js环境下
-					if (lib.node && lib.node.fs) {
-						path = __dirname + path;
-						path_bak = __dirname + path_bak;
-						// return alert(path)
-						const fs = lib.node.fs;
-						//创建备份文件
-						try {
-							fs.readFile(path, function read(err, data) {
-								if (err) {
-									throw err;
-								}
-								if(text_download == data){
-									alert('本地和下载的一模一样喵')
-								}else{
-									fs.appendFile(path_bak, data, function (err) {
-										if (err) throw err;
-									});
-								}
-							});
-						} catch (e) {
-							return alert("备份时：" + e);
-						}
-						//更新文件
-						try {
-							fs.writeFileSync(path, text_download);
-						} catch (e) {
-							return alert("更新extension.js时：" + e);
-						}
-					}
-					//移动端
-					else {
-
-						//将内容数据写入到文件中
-						function writeFile(fileEntry, dataObj) {
-							//创建一个写入对象
-							fileEntry.createWriter(function (fileWriter) {
-								//文件写入成功
-								fileWriter.onwriteend = function () {
-									// alert("Successful file read...");
-								};
-
-								//文件写入失败
-								fileWriter.onerror = function (e) {
-									alert("Failed file read: " + e.toString());
-								};
-
-								//写入文件
-								fileWriter.write(dataObj);
-							});
-						}
-
-
-						//备份文件
-						game.readFileAsText(
-							"extension/" + extName + "/extension.js",
-							e => {
-								var oldt = e;
-								if(text_download == data){
-									alert('本地和下载的一模一样喵')
-								}else{
-									window.resolveLocalFileSystemURL(
-										lib.assetURL + "extension/" + extName,
-										function (root) {
-											root.getFile(
-												fileName_bak,
-												{ create: true },
-												function (fileEntry) {
-													var dataObj = new Blob([oldt], { type: "text/plain" });
-													//写入文件
-													// alert(oldt);
-													writeFile(fileEntry, dataObj);
-												},
-												function (err) {
-													alert("创建失败!");
-												}
-											);
-										},
-										function (err) {}
-									);
-								}
-								
-							},
-							() => {}
-						);
-						
-						//更新extension.js
-						window.resolveLocalFileSystemURL(
-							lib.assetURL + "extension/" + extName,
-							function (root) {
-								root.getFile(
-									"extension.js",
-									{ create: true },
-									function (fileEntry) {
-										var dataObj = new Blob([text_download], { type: "text/plain" });
-										//写入文件
-										writeFile(fileEntry, dataObj);
-									},
-									function (err) {
-										alert("创建失败!");
-									}
-								);
-							},
-							function (err) {}
-						);
-					}
-					
+					miao_update_extension_js(url,extName)
 					alert("更新完成");
 					this.innerHTML = "<span><button>更新喵喵喵喵</button></span>";
 				}
@@ -1691,7 +1565,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return alert("已经在更新了");
 					}
 					this.innerHTML = "<button>更新中</button>";
-					await miao_update_extension_js("https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension_tool/main/extension.js",'喵喵配件')
+					miao_update_extension_js("https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension_tool/main/extension.js",'喵喵配件')
 					alert("更新完成");
 					this.innerHTML = "<span><button>更新喵喵配件</button></span>";
 				}
