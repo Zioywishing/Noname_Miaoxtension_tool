@@ -64,7 +64,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			path_bak = __dirname + path_bak;
 			// return alert(path)
 			const fs = lib.node.fs;
-			//创建备份文件
+			//检查是否需要更新
 			try {
 				fs.readFile(path, function read(err, data1) {
 					if (err) {
@@ -73,14 +73,19 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					if(text_download == data1){
 						alert('本地和下载的一模一样喵')
 					}else{
+						//备份
 						fs.appendFile(path_bak, data1, function (err) {
 							if (err) throw err;
-							// 更新文件
+
+
+							// 备份后callback中更新文件
 							try {
 								fs.writeFileSync(path, text_download);
 							} catch (e) {
 								return alert("更新extension.js时：" + e);
 							}
+							
+							alert("更新完成");
 						});
 
 					}
@@ -151,6 +156,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											},
 											function (err) {}
 										);
+										
+										alert("更新完成");
 									},
 									function (err) {
 										alert("创建失败!");
@@ -1556,7 +1563,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					var url = "https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/extension.js";
 					var extName = "喵喵喵喵";
 					miao_update_extension_js(url,extName)
-					alert("更新完成");
 					this.innerHTML = "<span><button>更新喵喵喵喵</button></span>";
 				}
 			},
@@ -1571,7 +1577,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 					this.innerHTML = "<button>更新中</button>";
 					miao_update_extension_js("https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension_tool/main/extension.js",'喵喵配件')
-					alert("更新完成");
 					this.innerHTML = "<span><button>更新喵喵配件</button></span>";
 				}
 			},
