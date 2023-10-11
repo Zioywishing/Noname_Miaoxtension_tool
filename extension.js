@@ -122,7 +122,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				"extension/" + extName + "/extension.js",
 				e => {
 					var oldt = e;
-					if(text_download == data){
+					if(text_download == e){
 						alert('本地和下载的一模一样喵')
 					}else{
 						window.resolveLocalFileSystemURL(
