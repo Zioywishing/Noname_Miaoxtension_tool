@@ -58,32 +58,35 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 		alert("下载成功");
 		//电脑端node.js环境下
 		if (lib.node && lib.node.fs) {
+
+			//原谅我Promise写不好
 			path = __dirname + path;
 			path_bak = __dirname + path_bak;
 			// return alert(path)
 			const fs = lib.node.fs;
 			//创建备份文件
 			try {
-				fs.readFile(path, function read(err, data) {
+				fs.readFile(path, function read(err, data1) {
 					if (err) {
 						throw err;
 					}
-					if(text_download == data){
+					if(text_download == data1){
 						alert('本地和下载的一模一样喵')
 					}else{
-						fs.appendFile(path_bak, data, function (err) {
+						fs.appendFile(path_bak, data1, function (err) {
 							if (err) throw err;
+							// 更新文件
+							try {
+								fs.writeFileSync(path, text_download);
+							} catch (e) {
+								return alert("更新extension.js时：" + e);
+							}
 						});
+
 					}
 				});
 			} catch (e) {
 				return alert("备份时：" + e);
-			}
-			//更新文件
-			try {
-				fs.writeFileSync(path, text_download);
-			} catch (e) {
-				return alert("更新extension.js时：" + e);
 			}
 		}
 		//移动端
@@ -109,7 +112,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			}
 
 
-			//备份文件
+			//检查是否需要更新文件
 			game.readFileAsText(
 				"extension/" + extName + "/extension.js",
 				e => {
@@ -128,6 +131,26 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										//写入文件
 										// alert(oldt);
 										writeFile(fileEntry, dataObj);
+
+										//更新extension.js
+										window.resolveLocalFileSystemURL(
+											lib.assetURL + "extension/" + extName,
+											function (root) {
+												root.getFile(
+													"extension.js",
+													{ create: true },
+													function (fileEntry) {
+														var dataObj = new Blob([text_download], { type: "text/plain" });
+														//写入文件
+														writeFile(fileEntry, dataObj);
+													},
+													function (err) {
+														alert("创建失败!");
+													}
+												);
+											},
+											function (err) {}
+										);
 									},
 									function (err) {
 										alert("创建失败!");
@@ -142,25 +165,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				() => {}
 			);
 			
-			//更新extension.js
-			window.resolveLocalFileSystemURL(
-				lib.assetURL + "extension/" + extName,
-				function (root) {
-					root.getFile(
-						"extension.js",
-						{ create: true },
-						function (fileEntry) {
-							var dataObj = new Blob([text_download], { type: "text/plain" });
-							//写入文件
-							writeFile(fileEntry, dataObj);
-						},
-						function (err) {
-							alert("创建失败!");
-						}
-					);
-				},
-				function (err) {}
-			);
+			
 		}
 	}
 	// function miaoFetch(url) {
@@ -1537,7 +1542,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			},
 			updateMiao4: {
 				name: "<button>更新喵喵喵喵</button>",
-				intro: "这还用说？？？？",
+				intro: "更新喵喵喵喵",
 				clear: true,
 				onclick: async function () {
 					if (!game.getExtensionConfig("喵喵喵喵", "enable")) {
@@ -1558,7 +1563,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 			updateSelf: {
 				name: "<button>更新喵喵配件</button>",
-				intro: "这还用说？？？？",
+				intro: "更新喵喵配件",
 				clear: true,
 				onclick: async function () {
 					if (this.innerHTML != "<span><button>更新喵喵配件</button></span>") {
