@@ -147,9 +147,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							function (err) {}
 						);
 					}
-
-					
-					
 				},
 				() => {}
 			);
