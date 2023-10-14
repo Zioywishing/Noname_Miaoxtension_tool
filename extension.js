@@ -1780,7 +1780,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				intro: "测试下载功能",
 				clear: true,
 				onclick: async function () {
-					miao_download("https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/zioy_purangsigai.jpg",'喵喵配件','下载测试.jpg')
+					miao_download("https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/zioy_purangsigai.jpg",'喵喵配件','zioy_purangsigai.jpg')
 				}
 			},
 			// getFastestUpdateURLMiao4:{
