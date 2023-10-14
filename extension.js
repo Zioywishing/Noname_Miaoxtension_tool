@@ -1771,16 +1771,26 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 			
 			line2: {
-				name: "--------------------------",
+				name: "-------------------\
+				<br>URL      :<input id='miao_url_input' style='width:151px'> \
+				<br>下载至扩展:<input id='miao_extName_input' value='喵喵喵喵' style='width:100px'> \
+				<br>文件名:<input id='miao_fileName_input'  style='width:128px'>",//1字14px
 				clear: true
 			},
 
 			download_test: {
-				name: "<button>下载测试</button>",
-				intro: "测试下载功能",
+				name: "<button>下载</button>",
+				intro: "下载功能",
 				clear: true,
 				onclick: async function () {
-					miao_download("https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/zioy_purangsigai.jpg",'喵喵配件','zioy_purangsigai.jpg')
+					var url = document.querySelector('#miao_url_input').value
+					var extName = document.querySelector('#miao_extName_input').value
+					var fileName = document.querySelector('#miao_fileName_input').value
+					// alert(url+'\n'+extName+'\n'+fileName)
+					if(url == '' || extName == '' || fileName == ''){
+						return alert('存在必填未填写')
+					}
+					miao_download(url,extName, fileName)
 				}
 			},
 			// getFastestUpdateURLMiao4:{
