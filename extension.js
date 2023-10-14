@@ -191,6 +191,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 		var path_bak = path + "." + time.valueOf() + ".bak";
 		// var fileName = "extension.js";
 		var fileName_bak = fileName + "." + time.valueOf() + ".bak";
+
+		// 字面意思
+		function _arrayBufferToBytes( buffer ) {
+			var bytes = new Uint8Array( buffer );
+			return bytes;
+		}
+
 		try {
 			var fec = miaoFetch(url);
 			fec.catch(err => reject(err));
@@ -202,8 +209,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					return data;
 				})
 				.then(res => {
-					data_download = Buffer.from(res)
-					alert('ok')
+					// data_download = Buffer.from(res)
+					data_download = _arrayBufferToBytes(res)
+					alert('下载完成')
 				});
 		} catch (e) {
 			return alert("连接出了问题喵:" + e);
@@ -263,7 +271,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				function (err) {}
 			);
 			
-			alert("更新完成");
+			// alert("更新完成");
 			
 		}
 	}
@@ -1774,7 +1782,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				name: "-------------------\
 				<br>URL      :<input id='miao_url_input' style='width:151px'> \
 				<br>下载至扩展:<input id='miao_extName_input' value='喵喵喵喵' style='width:100px'> \
-				<br>文件名:<input id='miao_fileName_input'  style='width:128px'>",//1字14px
+				<br>选填文件名:<input id='miao_fileName_input'  style='width:100px'>",//1字14px
 				clear: true
 			},
 
@@ -1787,12 +1795,18 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					var extName = document.querySelector('#miao_extName_input').value
 					var fileName = document.querySelector('#miao_fileName_input').value
 					// alert(url+'\n'+extName+'\n'+fileName)
-					if(url == '' || extName == '' || fileName == ''){
+					if(url == '' || extName == '' ){
 						return alert('存在必填未填写')
+					}else if(fileName == ''){
+						var ls = url.split('/')
+						fileName = ls[ls.length-1]
+						alert('设置文件名为' + fileName)
 					}
 					miao_download(url,extName, fileName)
 				}
 			},
+
+
 			// getFastestUpdateURLMiao4:{
 			// 	onclick:getFastestUpdateURLMiao4,
 			// 	clear:true,
