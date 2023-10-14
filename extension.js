@@ -1,4 +1,5 @@
 game.import("extension", function (lib, game, ui, get, ai, _status) {
+
 	//重置删除扩展的选择
 	lib.config.extension_喵喵配件_extensionDeleter1 = "1";
 
@@ -47,9 +48,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			fec.catch(err => reject(err));
 			await fec
 				.then(data => {
+					// console.log(data)
 					return data.text();
 				})
 				.then(res => {
+					// console.log(res)
 					text_download = res;
 				});
 		} catch (e) {
@@ -160,6 +163,95 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						{ create: true },
 						function (fileEntry) {
 							var dataObj = new Blob([text_download], { type: "text/plain" });
+							//写入文件
+							writeFile(fileEntry, dataObj);
+						},
+						function (err) {
+							alert("创建失败!");
+						}
+					);
+				},
+				function (err) {}
+			);
+			
+			alert("更新完成");
+			
+		}
+	}
+
+
+	// 从url下载文件到指定扩展extName并命名为fileName
+	async function miao_download(url, extName, fileName){
+		// var url = "https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/extension.js";
+		var data_download;
+		var done;
+		// var extName = "喵喵喵喵";
+		var path = "\\extension\\" + extName + "\\" + fileName;
+		var time = new Date();
+		var path_bak = path + "." + time.valueOf() + ".bak";
+		// var fileName = "extension.js";
+		var fileName_bak = fileName + "." + time.valueOf() + ".bak";
+		try {
+			var fec = miaoFetch(url);
+			fec.catch(err => reject(err));
+			await fec
+				.then(data => {
+					console.log(data)
+					data = data.arrayBuffer()
+					console.log(data)
+					return data;
+				})
+				.then(res => {
+					data_download = Buffer.from(res)
+					alert('ok')
+				});
+		} catch (e) {
+			return alert("连接出了问题喵:" + e);
+		}
+		//电脑端node.js环境下
+		if (lib.node && lib.node.fs) {
+
+			//原谅我Promise写不好
+			path = __dirname + path;
+			path_bak = __dirname + path_bak;
+			// return alert(path)
+			const fs = lib.node.fs;
+
+			fs.writeFileSync(path, data_download);
+		}
+		//移动端
+		else {
+
+			//将内容数据写入到文件中
+			function writeFile(fileEntry, dataObj) {
+				//创建一个写入对象
+				fileEntry.createWriter(function (fileWriter) {
+					//文件写入成功
+					fileWriter.onwriteend = function () {
+						// alert("Successful file read...");
+					};
+
+					//文件写入失败
+					fileWriter.onerror = function (e) {
+						alert("Failed file read: " + e.toString());
+					};
+
+					//写入文件
+					fileWriter.write(dataObj);
+				});
+			}
+
+
+			
+			//更新文件
+			window.resolveLocalFileSystemURL(
+				lib.assetURL + "extension/" + extName,
+				function (root) {
+					root.getFile(
+						fileName,
+						{ create: true },
+						function (fileEntry) {
+							var dataObj = new Blob([data_download], { type: "image/jpeg" });
 							//写入文件
 							writeFile(fileEntry, dataObj);
 						},
@@ -338,9 +430,105 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 				};
 			}
+
+
 			if (lib.config.extension_喵喵配件_nodelay) {
 				miao_nodelay()
 			}
+
+
+			// 让ai爱上诸葛连弩
+			if(false){
+				lib.card['zhuge'] ={
+					fullskin:true,
+					type:"equip",
+					subtype:"equip1",
+					ai:{
+						order:function(){
+							return 9999;
+							return get.order({name:'sha'})-0.1;
+						},
+						equipValue:function(card,player){
+							return 9999
+							if(player._zhuge_temp) return 1;
+							player._zhuge_temp=true;
+							var result=function(){
+								if(!game.hasPlayer(function(current){
+									return get.distance(player,current)<=1&&player.canUse('sha',current)&&get.effect(current,{name:'sha'},player,player)>0;
+								})){
+									return 1;
+								}
+								if(player.hasSha()&&_status.currentPhase==player){
+									if(player.getEquip('zhuge')&&player.countUsed('sha')||player.getCardUsable('sha')==0){
+										return 10;
+									}
+								}
+								var num=player.countCards('h','sha');
+								if(num>1) return 6+num;
+								return 3+num;
+							}();
+							delete player._zhuge_temp;
+							return result;
+						},
+						basic:{
+							equipValue:100,
+							order:(card,player)=>{
+								const equipValue=get.equipValue(card,player)/20;
+								return player&&player.hasSkillTag('reverseEquip')?8.5-equipValue:8+equipValue;
+							},
+							useful:2000,
+							value:(card,player,index,method)=>{
+								return 9999
+
+								//摸牌摸多了自然喜欢诸葛连弩
+								var num=0;
+								for(j=0;j<player.stat.length;j++){
+									if(player.stat[j].gain!=undefined) num+=player.stat[j].gain;
+								}
+								// alert(num)
+								game.log(num)
+								if(num/game.roundNumber > 5)return Infinity;
+
+								// if(player.storage._miao_equip_love && player.storage._miao_equip_love['zhuge']){
+								// 	return Infinity;
+								// }
+								if(!player.getCards('e').contains(card)&&!player.canEquip(card,true)) return 0.01;
+								const info=get.info(card),current=player.getEquip(info.subtype),value=current&&card!=current&&get.value(current,player);
+								let equipValue=info.ai.equipValue||info.ai.basic.equipValue;
+								if(typeof equipValue=='function'){
+									if(method=='raw')return equipValue(card,player);
+									if(method=='raw2')return equipValue(card,player)-value;
+									return Math.max(0.1,equipValue(card,player)-value);
+								}
+								if(typeof equipValue!='number') equipValue=0;
+								if(method=='raw') return equipValue;
+								if(method=='raw2') return equipValue-value;
+								return Math.max(0.1,equipValue-value);
+							},
+						},
+						tag:{
+							valueswap:1,
+						},
+						result:{
+							// target:(player,target,card)=>get.equipResult(player,target,card.name),
+							target:(player,target,card)=>{return 9999},
+						},
+					},
+					skills:["zhuge_skill"],
+					enable:true,
+					selectTarget:-1,
+					filterTarget:(card,player,target)=>player==target&&target.canEquip(card,true),
+					modTarget:true,
+					allowMultiple:false,
+					content:function(){
+						if(cards.length&&get.position(cards[0],true)=='o') target.equip(cards[0]);
+					},
+					toself:true,
+				}
+			}
+
+
+			//四字适配
 			if (lib.config.extension_喵喵配件_nodeintroFix) {
 				get.nodeintro = function (node, simple, evt) {
 					var uiintro = ui.create.dialog("hidden", "notouchscroll");
@@ -1580,12 +1768,27 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					this.innerHTML = "<span><button>更新喵喵配件</button></span>";
 				}
 			},
+
+			
+			line2: {
+				name: "--------------------------",
+				clear: true
+			},
+
+			download_test: {
+				name: "<button>下载测试</button>",
+				intro: "测试下载功能",
+				clear: true,
+				onclick: async function () {
+					miao_download("https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/zioy_purangsigai.jpg",'喵喵配件','下载测试.jpg')
+				}
+			},
 			// getFastestUpdateURLMiao4:{
 			// 	onclick:getFastestUpdateURLMiao4,
 			// 	clear:true,
 			// 	name: "<button>测试连接更新源</button>",
 			// },
-			line2: {
+			line3: {
 				name: "------------",
 				clear: true
 			},
