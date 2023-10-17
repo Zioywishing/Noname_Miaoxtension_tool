@@ -1807,23 +1807,40 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				intro: "下载功能",
 				clear: true,
 				onclick: async function () {
-					file_local = []
-					img_need = []
+
+					// // 扩展包需求img
+					// for(var i in lib.characterPack['mode_extension_喵喵喵喵']){
+					// 	var p = lib.characterPack['mode_extension_喵喵喵喵'][i]
+					// 	// game.log(p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1])
+					// 	img_map[p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1]] = false
+					// 	console.log(i,typeof i)
+						
+					// }
+
 					// 本地img
 					game.getFileList("extension/喵喵喵喵",(fold,files)=>{
-						for(var i of files){
-							game.log(i)
-							file_local.push(i)
+						
+						img_map = {}
+						// 扩展包需求img
+						for(var i in lib.characterPack['mode_extension_喵喵喵喵']){
+							var p = lib.characterPack['mode_extension_喵喵喵喵'][i]
+							// game.log(p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1])
+							img_map[p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1]] = false
+							console.log(i,typeof i)
+							
 						}
+
+						for(var i of files){
+							// game.log(i)
+							console.log(i,typeof i)
+							if(img_map[i] === false)img_map[i] = true;
+						}
+
+						console.log(img_map)
 					},()=>{})
 					// game.log(lib.extensionPack)
 
-					// 扩展包需求img
-					for(var i in lib.characterPack['mode_extension_喵喵喵喵']){
-						var p = lib.characterPack['mode_extension_喵喵喵喵'][i]
-						game.log(p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1])
-						img_need.push(p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1])
-					}
+					
 
 				
 				}
