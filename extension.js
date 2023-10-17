@@ -211,7 +211,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				.then(res => {
 					// data_download = Buffer.from(res)
 					data_download = _arrayBufferToBytes(res)
-					alert('下载完成')
+					alert('下载' + fileName + '至' + path +'完成')
 				});
 		} catch (e) {
 			return alert("连接出了问题喵:" + e);
@@ -1736,7 +1736,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			// 	}
 			// },
 			line1: {
-				name: "------------",
+				name: "------------------",
 				clear: true
 			},
 			updateMiao4: {
@@ -1757,6 +1757,45 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					miao_update_extension_js(url,extName)
 					this.innerHTML = "<span><button>更新喵喵喵喵</button></span>";
 				}
+			},
+
+			line65464: {
+				name: "------------",
+				clear: true
+			},
+			
+			test: {
+				name: "<button>更新喵喵喵喵图片素材</button>",
+				intro: "通过遍历所有武将的头像列表和目录下的文件对比，自动下载缺失的图像素材",
+				clear: true,
+				onclick: async function () {
+					// 本地img
+					game.getFileList("extension/喵喵喵喵",(fold,files)=>{
+						img_map = {}
+						// 扩展包需求img
+						for(var i in lib.characterPack['mode_extension_喵喵喵喵']){
+							var p = lib.characterPack['mode_extension_喵喵喵喵'][i]
+							// game.log(p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1])
+							img_map[p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1]] = false
+						}
+
+						for(var i of files){
+							// game.log(i)
+							if(img_map[i] === false)img_map[i] = true;
+						}
+
+						for(var i in img_map){
+							if(!img_map[i]){
+								miao_download("https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/" + i,'喵喵喵喵',i)
+							}
+						}
+					},()=>{alert('失败')})
+				}
+			},
+
+			line45544574: {
+				name: "------------",
+				clear: true
 			},
 
 			updateSelf: {
@@ -1802,49 +1841,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				}
 			},
 
-			test: {
-				name: "<button>测试</button>",
-				intro: "下载功能",
-				clear: true,
-				onclick: async function () {
-
-					// // 扩展包需求img
-					// for(var i in lib.characterPack['mode_extension_喵喵喵喵']){
-					// 	var p = lib.characterPack['mode_extension_喵喵喵喵'][i]
-					// 	// game.log(p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1])
-					// 	img_map[p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1]] = false
-					// 	console.log(i,typeof i)
-						
-					// }
-
-					// 本地img
-					game.getFileList("extension/喵喵喵喵",(fold,files)=>{
-						
-						img_map = {}
-						// 扩展包需求img
-						for(var i in lib.characterPack['mode_extension_喵喵喵喵']){
-							var p = lib.characterPack['mode_extension_喵喵喵喵'][i]
-							// game.log(p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1])
-							img_map[p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1]] = false
-							console.log(i,typeof i)
-							
-						}
-
-						for(var i of files){
-							// game.log(i)
-							console.log(i,typeof i)
-							if(img_map[i] === false)img_map[i] = true;
-						}
-
-						console.log(img_map)
-					},()=>{})
-					// game.log(lib.extensionPack)
-
-					
-
-				
-				}
-			},
 
 
 			// getFastestUpdateURLMiao4:{
