@@ -275,17 +275,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			
 		}
 	}
-	// function miaoFetch(url) {
-	// 	var p1 = new Promise((resolve, reject)=>{
 
-	// 	})
-	// 	var p2 = new Promise((resolve, reject)=>{
-	// 		setTimeout(()=>{
-	// 			reject('timeout')
-	// 		},5000)
-	// 	})
-	// 	return Promise.race([p1,p2])
-	// }
+
+
+
+
+
+
 
 	return {
 		name: "喵喵配件",
@@ -1803,6 +1799,33 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						alert('设置文件名为' + fileName)
 					}
 					miao_download(url,extName, fileName)
+				}
+			},
+
+			test: {
+				name: "<button>测试</button>",
+				intro: "下载功能",
+				clear: true,
+				onclick: async function () {
+					file_local = []
+					img_need = []
+					// 本地img
+					game.getFileList("extension/喵喵喵喵",(fold,files)=>{
+						for(var i of files){
+							game.log(i)
+							file_local.push(i)
+						}
+					},()=>{})
+					// game.log(lib.extensionPack)
+
+					// 扩展包需求img
+					for(var i in lib.characterPack['mode_extension_喵喵喵喵']){
+						var p = lib.characterPack['mode_extension_喵喵喵喵'][i]
+						game.log(p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1])
+						img_need.push(p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1])
+					}
+
+				
 				}
 			},
 
