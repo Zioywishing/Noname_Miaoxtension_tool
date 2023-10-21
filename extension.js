@@ -276,11 +276,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 	}
 
 	// 从url下载文件到指定路径并命名为fileName
+	// 例：miao_download_root('https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension_tool/main/miao/boss.js',"mode","boss.js")
 	async function miao_download_root(url, path, fileName){
 		// var url = "https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/extension.js";
 		var data_download;
 		// var extName = "喵喵喵喵";
-		path = path + "\\" + fileName;
+		path = "\\" + path + "\\" + fileName;
 		var time = new Date();
 		var path_bak = path + "." + time.valueOf() + ".bak";
 		// var fileName = "extension.js";
@@ -323,7 +324,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 		}
 		//移动端
 		else {
-
+			path = path.slice(1)
 			//将内容数据写入到文件中
 			function writeFile(fileEntry, dataObj) {
 				//创建一个写入对象
@@ -347,7 +348,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			
 			//更新文件
 			window.resolveLocalFileSystemURL(
-				lib.assetURL + "extension/" + extName,
+				lib.assetURL + path,
 				function (root) {
 					root.getFile(
 						fileName,
