@@ -184,9 +184,103 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 	async function miao_download(url, extName, fileName){
 		// var url = "https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/extension.js";
 		var data_download;
-		var done;
 		// var extName = "喵喵喵喵";
 		var path = "\\extension\\" + extName + "\\" + fileName;
+		var time = new Date();
+		var path_bak = path + "." + time.valueOf() + ".bak";
+		// var fileName = "extension.js";
+		var fileName_bak = fileName + "." + time.valueOf() + ".bak";
+
+		// 字面意思
+		function _arrayBufferToBytes( buffer ) {
+			var bytes = new Uint8Array( buffer );
+			return bytes;
+		}
+
+		try {
+			var fec = miaoFetch(url);
+			fec.catch(err => reject(err));
+			await fec
+				.then(data => {
+					console.log(data)
+					data = data.arrayBuffer()
+					console.log(data)
+					return data;
+				})
+				.then(res => {
+					// data_download = Buffer.from(res)
+					data_download = _arrayBufferToBytes(res)
+					alert('下载' + fileName + '至' + path +'完成')
+				});
+		} catch (e) {
+			return alert("连接出了问题喵:" + e);
+		}
+		//电脑端node.js环境下
+		if (lib.node && lib.node.fs) {
+
+			//原谅我Promise写不好
+			path = __dirname + path;
+			path_bak = __dirname + path_bak;
+			// return alert(path)
+			const fs = lib.node.fs;
+
+			fs.writeFileSync(path, data_download);
+		}
+		//移动端
+		else {
+
+			//将内容数据写入到文件中
+			function writeFile(fileEntry, dataObj) {
+				//创建一个写入对象
+				fileEntry.createWriter(function (fileWriter) {
+					//文件写入成功
+					fileWriter.onwriteend = function () {
+						// alert("Successful file read...");
+					};
+
+					//文件写入失败
+					fileWriter.onerror = function (e) {
+						alert("Failed file read: " + e.toString());
+					};
+
+					//写入文件
+					fileWriter.write(dataObj);
+				});
+			}
+
+
+			
+			//更新文件
+			window.resolveLocalFileSystemURL(
+				lib.assetURL + "extension/" + extName,
+				function (root) {
+					root.getFile(
+						fileName,
+						{ create: true },
+						function (fileEntry) {
+							var dataObj = new Blob([data_download], { type: "image/jpeg" });
+							//写入文件
+							writeFile(fileEntry, dataObj);
+						},
+						function (err) {
+							alert("创建失败!");
+						}
+					);
+				},
+				function (err) {}
+			);
+			
+			// alert("更新完成");
+			
+		}
+	}
+
+	// 从url下载文件到指定路径并命名为fileName
+	async function miao_download_root(url, path, fileName){
+		// var url = "https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/extension.js";
+		var data_download;
+		// var extName = "喵喵喵喵";
+		path = path + "\\" + fileName;
 		var time = new Date();
 		var path_bak = path + "." + time.valueOf() + ".bak";
 		// var fileName = "extension.js";
@@ -1852,6 +1946,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				name: "------------",
 				clear: true
 			},
+			
+			boss_brawl: {
+				name: "<button>单人boss，千里双骑</button>",
+				intro: "覆写boss.js与brawl.js,不会备份!!!",
+				clear: true,
+				onclick: async function () {
+					miao_download_root('https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension_tool/main/miao/boss.js',"\\mode","boss.js")
+					miao_download_root('https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension_tool/main/miao/brawl.js',"\\mode","brawl.js")
+				}
+			},
+
+
+			line4543: {
+				name: "------------",
+				clear: true
+			},
+
+
 			globalStatusIntro: {
 				name: '<div class="miao">全局状态机制介绍<font size="4px">▶▶▶</font></div>',
 				clear: true,
