@@ -2286,7 +2286,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					"sup_dushuai": {
 						audio: "ext:超界突破:2",
 						trigger: {
-							player: "phaseJieshuBegin"
+							player: "phaseEnd"
 						},
 						init: function (player) {
 							player.storage.dstype = 2
@@ -2315,10 +2315,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						priority: -1,
 						mod: {
 							attackFrom: function (from, to, distance) {
-								return distance - 1
+								return distance - 2
 							},
 							cardUsable: function (card, player, num) {
-								if (card.name == "sha") return num + 1
+								if (card.name == "sha") return num + 2
 							}
 						},
 						init: function (player) {
@@ -2349,7 +2349,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						},
 						forced: true,
 						content: function () {
-							player.draw(1)
+							player.draw(4)
 						},
 						priority: -1
 					},
@@ -2360,7 +2360,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						forced: true,
 						preHidden: true,
 						filter: function (event, player) {
-							return player.hujia == 0
+							return player.hujia < 2
 						},
 						content: function () {
 							player.loseMaxHp(1)
@@ -3757,7 +3757,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					"sup_luoyi1_info": "你的下一张【杀】不可被响应。",
 					"sup_dushuai": "督率",
 					"sup_dushuai_info":
-						"你获得此技能时将〖督率〗状态改为防。你的回合结束阶段，你可以转换你的督率状态。<br>攻：你的摸牌阶段摸牌数-1，出牌阶段你的攻击距离+1，出牌阶段你可以多使用一张【杀】。<br>守：你的体力上限+4，回合结束阶段，你摸1张牌。一名角色的准备阶段，若你没有护甲，你失去一点体力上限并获得一点护甲。出牌阶段你使用牌无法指定其他角色为目标。",
+						"你获得此技能时将〖督率〗状态改为防。你的回合结束阶段，你可以转换你的督率状态。<br>攻：你的摸牌阶段摸牌数-1，出牌阶段你的攻击距离+2，出牌阶段你可以多使用2张【杀】。<br>守：你的体力上限+4，回合结束阶段开始时，你摸4张牌。一名角色的准备阶段，若你护甲少于2点，你失去一点体力上限并获得一点护甲。出牌阶段你使用牌无法指定其他角色为目标。",
 					"sup_dushuaigong": "督率",
 					"sup_dushuaigong_info": "攻",
 					"sup_dushuaifang": "督率",
