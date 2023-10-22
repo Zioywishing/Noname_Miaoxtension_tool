@@ -1847,7 +1847,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return alert("已经在更新了");
 					}
 					this.innerHTML = "<button>更新中</button>";
-					var url = "https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/extension.js";
+					var url = "http://git.miaospring.top:3000/539943419/noname_miaomiao/raw/branch/main/extension.js";
 					var extName = "喵喵喵喵";
 					miao_update_extension_js(url,extName)
 					this.innerHTML = "<span><button>更新喵喵喵喵</button></span>";
@@ -1881,7 +1881,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 						for(var i in img_map){
 							if(!img_map[i]){
-								miao_download("https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension/main/" + i,'喵喵喵喵',i)
+								miao_download("http://git.miaospring.top:3000/539943419/noname_miaomiao/raw/branch/main/" + i,'喵喵喵喵',i)
 							}
 						}
 					},()=>{alert('失败')})
@@ -1902,7 +1902,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return alert("已经在更新了");
 					}
 					this.innerHTML = "<button>更新中</button>";
-					miao_update_extension_js("https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension_tool/main/extension.js",'喵喵配件')
+					miao_update_extension_js("http://git.miaospring.top:3000/539943419/noname_miaotool/raw/branch/main/extension.js",'喵喵配件')
 					this.innerHTML = "<span><button>更新喵喵配件</button></span>";
 				}
 			},
