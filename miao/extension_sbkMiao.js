@@ -258,13 +258,17 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							var i = player.storage.hjianxiong
 							player.removeMark("yeba", player.storage.hjianxiong)
 							player.storage.hjianxiong = 0
+							var nd = 0
+							var nr = 0
 							while (i > 0) {
 								i = i - 1
-								player.draw()
+								nd++;
 								if ([true, false].randomGet()) {
-									player.recover()
+									nr++;
 								}
 							}
+							if(nd > 0)player.draw(nd)
+							if(nr > 0)player.recover(nr)
 							//player.addSkillBlocker(event.name);
 						},
 						ai: {
@@ -282,13 +286,23 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						},
 						content: function () {
 							"step 0"
-							if (get.itemtype(trigger.cards) == "cards" && get.position(trigger.cards[0], true) == "o") {
+							event.flag = true;
+							event.num = trigger.num;
+							"step 1"
+							"step 2"
+							if (get.itemtype(trigger.cards) == "cards" && get.position(trigger.cards[0], true) == "o" && event.flag) {
 								player.gain(trigger.cards, "gain2")
 							} else player.draw()
 							player.draw("nodelay")
 							player.addMark("yeba")
 							player.storage.hjianxiong += 1
 							//player.removeSkillBlocker('yeba');
+							"step 3"
+							event.num -= 1;
+							event.flag = false;
+							if(event.num > 0){
+								event.goto(2)
+							}
 						},
 						ai: {
 							maixie: true,
@@ -1706,13 +1720,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						ai: {
 							result: {
 								target: function (player, target) {
-									if (target.countCards("hej") > target.hp + 1 && get.recoverEffect(target) > 0) {
-										return 1
-									}
-									if (player.canUse("sha", target) && (player.countCards("hej", "sha") || player.countCards("hej", { color: "red" }))) {
-										return 1
-									}
-									return 1
+									// if (target.countCards("hej") > target.hp + 1 && get.recoverEffect(target) > 0) {
+									// 	return 1
+									// }
+									// if (player.canUse("sha", target) && (player.countCards("hej", "sha") || player.countCards("hej", { color: "red" }))) {
+									// 	return 1
+									// }
+									return (get.attitude(player,target)+0.1) * 10
 								}
 							},
 							order: 9,
@@ -3669,7 +3683,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					"yeba_info":
 						"当你造成伤害时，你可摸X张牌，并令此伤害+X，你每以此法摸一张牌，就有50%概率回复一点体力。( X为你上一次发动〖业霸〗后发动〖奸雄〗的次数）",
 					supjianxiong: "奸雄",
-					"supjianxiong_info": "当你受到伤害后，你可以获得对你造成伤害的牌并摸一张牌，若无法获得对你造成伤害的牌，则改为摸两张牌。",
+					"supjianxiong_info": "当你受到1点伤害后，你可以获得对你造成伤害的牌并摸一张牌，若无法获得对你造成伤害的牌，则改为摸两张牌。",
 					supkongcheng: "空城",
 					"supkongcheng_info": "锁定技，当你没有手牌时，你不能成为除【万箭齐发】外其他牌的目标。",
 					supguanxing: "观星",
