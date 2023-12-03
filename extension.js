@@ -452,9 +452,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			// 	}
 			// }
 
-
+			
+			// alert(lib.config.extension_喵喵配件_player_number_33)
 			if(lib.config.extension_喵喵配件_player_number_33){
-				setTimeout(()=>{
+				setInterval(()=>{
 					Object.defineProperty(lib.mode.identity.config.player_number, "item", {
 						get: function () {
 							const minimumNumberOfPlayers=2,maximumNumberOfPlayers=Math.max(_status.maximumNumberOfPlayers||10,minimumNumberOfPlayers,33),item={};
@@ -464,7 +465,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							return item;
 						},
 					});
-				},1000)
+					// alert(1)
+				},2000)
 			}
 			
 			
@@ -499,7 +501,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							if (lib.config.game_speed == "nodelay"){ time = 1}
 							_status.timeout = setTimeout(game.resume, time);
 						};
-					},700)
+					},2000)
 				}
 
 				
@@ -647,7 +649,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 			//四字适配
 			if (lib.config.extension_喵喵配件_nodeintroFix) {
-				setTimeout(()=>{
+				setInterval(()=>{
 				get.nodeintro = function (node, simple, evt) {
 					var uiintro = ui.create.dialog("hidden", "notouchscroll");
 					if (node.classList.contains("player") && !node.name) {
@@ -1762,7 +1764,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						lib.setScroll(uiintro.contentContainer);
 					}
 					return uiintro;
-				}},1000)
+				}},2000)
 			}
 		},
 		precontent: function () {},
@@ -1773,11 +1775,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				intro: "开启此选项后游戏速度可选择无延迟，大大加快ai出牌速度。",
 				init: true
 			},
+			
 			nodeintroFix: {
 				name: "get.nodeintro修正",
 				intro: "开启此选项可正确显示超过2个字的技能名称。仅测试了军八环境",
 				init: true
 			},
+
 			player_number_33: {
 				name: "人数上限修改",
 				intro: "开启此选项可将人数上限修改为33人",
@@ -2072,7 +2076,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			author: "喵喵",
 			diskURL: "",
 			forumURL: "",
-			version: "23.10.11.11.31"
+			version: "23.12.3.12.12"
 		},
 		files: { "character": [], "card": [], "skill": [] }
 	};
