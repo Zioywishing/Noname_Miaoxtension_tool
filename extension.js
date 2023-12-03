@@ -454,8 +454,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 			
 			// alert(lib.config.extension_喵喵配件_player_number_33)
-			// if(lib.config.extension_喵喵配件_player_number_33){
-			// 	setTimeout(()=>{
+			if(lib.config.extension_喵喵配件_player_number_33){
+				// setTimeout(()=>{
 					Object.defineProperty(lib.mode.identity.config.player_number, "item", {
 						get: function () {
 							const minimumNumberOfPlayers=2,maximumNumberOfPlayers=Math.max(_status.maximumNumberOfPlayers||10,minimumNumberOfPlayers,33),item={};
@@ -465,9 +465,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							return item;
 						},
 					});
-					// alert(1)
-			// 	},2000)
-			// }
+				// },1000)
+			}
 			
 			
 			miao_nodelay = function(){
@@ -485,10 +484,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					},
 					intro: "设置不同游戏操作间的时间间隔"
 				};
-
 				//覆写十周年ui与被十周年ui覆写的delay,等1s加载完以后覆写
-				if(decadeUI){
-					setTimeout(()=>{
+				setTimeout(()=>{
+					if(decadeUI){
 						decadeUI.delay = num =>{}
 						dui.delay = num =>{}
 						game.delay = function (time, time2) {
@@ -500,9 +498,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							if (lib.config.game_speed == "vvfast") time /= 3;
 							if (lib.config.game_speed == "nodelay"){ time = 1}
 							_status.timeout = setTimeout(game.resume, time);
-						};
-					},2000)
-				}
+						}
+					};
+				},1000)
 
 				
 				game.delayx = function (time, time2) {
@@ -551,105 +549,110 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			}
 
 
+			// alert(2)
+
 			if (lib.config.extension_喵喵配件_nodelay) {
 				miao_nodelay()
 			}
 
+			// alert(3)
+
+
 
 			// 让ai爱上诸葛连弩
-			if(false){
-				lib.card['zhuge'] ={
-					fullskin:true,
-					type:"equip",
-					subtype:"equip1",
-					ai:{
-						order:function(){
-							return 9999;
-							return get.order({name:'sha'})-0.1;
-						},
-						equipValue:function(card,player){
-							return 9999
-							if(player._zhuge_temp) return 1;
-							player._zhuge_temp=true;
-							var result=function(){
-								if(!game.hasPlayer(function(current){
-									return get.distance(player,current)<=1&&player.canUse('sha',current)&&get.effect(current,{name:'sha'},player,player)>0;
-								})){
-									return 1;
-								}
-								if(player.hasSha()&&_status.currentPhase==player){
-									if(player.getEquip('zhuge')&&player.countUsed('sha')||player.getCardUsable('sha')==0){
-										return 10;
-									}
-								}
-								var num=player.countCards('h','sha');
-								if(num>1) return 6+num;
-								return 3+num;
-							}();
-							delete player._zhuge_temp;
-							return result;
-						},
-						basic:{
-							equipValue:100,
-							order:(card,player)=>{
-								const equipValue=get.equipValue(card,player)/20;
-								return player&&player.hasSkillTag('reverseEquip')?8.5-equipValue:8+equipValue;
-							},
-							useful:2000,
-							value:(card,player,index,method)=>{
-								return 9999
+			// if(false){
+			// 	lib.card['zhuge'] ={
+			// 		fullskin:true,
+			// 		type:"equip",
+			// 		subtype:"equip1",
+			// 		ai:{
+			// 			order:function(){
+			// 				return 9999;
+			// 				return get.order({name:'sha'})-0.1;
+			// 			},
+			// 			equipValue:function(card,player){
+			// 				return 9999
+			// 				if(player._zhuge_temp) return 1;
+			// 				player._zhuge_temp=true;
+			// 				var result=function(){
+			// 					if(!game.hasPlayer(function(current){
+			// 						return get.distance(player,current)<=1&&player.canUse('sha',current)&&get.effect(current,{name:'sha'},player,player)>0;
+			// 					})){
+			// 						return 1;
+			// 					}
+			// 					if(player.hasSha()&&_status.currentPhase==player){
+			// 						if(player.getEquip('zhuge')&&player.countUsed('sha')||player.getCardUsable('sha')==0){
+			// 							return 10;
+			// 						}
+			// 					}
+			// 					var num=player.countCards('h','sha');
+			// 					if(num>1) return 6+num;
+			// 					return 3+num;
+			// 				}();
+			// 				delete player._zhuge_temp;
+			// 				return result;
+			// 			},
+			// 			basic:{
+			// 				equipValue:100,
+			// 				order:(card,player)=>{
+			// 					const equipValue=get.equipValue(card,player)/20;
+			// 					return player&&player.hasSkillTag('reverseEquip')?8.5-equipValue:8+equipValue;
+			// 				},
+			// 				useful:2000,
+			// 				value:(card,player,index,method)=>{
+			// 					return 9999
 
-								//摸牌摸多了自然喜欢诸葛连弩
-								var num=0;
-								for(j=0;j<player.stat.length;j++){
-									if(player.stat[j].gain!=undefined) num+=player.stat[j].gain;
-								}
-								// alert(num)
-								game.log(num)
-								if(num/game.roundNumber > 5)return Infinity;
+			// 					//摸牌摸多了自然喜欢诸葛连弩
+			// 					var num=0;
+			// 					for(j=0;j<player.stat.length;j++){
+			// 						if(player.stat[j].gain!=undefined) num+=player.stat[j].gain;
+			// 					}
+			// 					// alert(num)
+			// 					game.log(num)
+			// 					if(num/game.roundNumber > 5)return Infinity;
 
-								// if(player.storage._miao_equip_love && player.storage._miao_equip_love['zhuge']){
-								// 	return Infinity;
-								// }
-								if(!player.getCards('e').contains(card)&&!player.canEquip(card,true)) return 0.01;
-								const info=get.info(card),current=player.getEquip(info.subtype),value=current&&card!=current&&get.value(current,player);
-								let equipValue=info.ai.equipValue||info.ai.basic.equipValue;
-								if(typeof equipValue=='function'){
-									if(method=='raw')return equipValue(card,player);
-									if(method=='raw2')return equipValue(card,player)-value;
-									return Math.max(0.1,equipValue(card,player)-value);
-								}
-								if(typeof equipValue!='number') equipValue=0;
-								if(method=='raw') return equipValue;
-								if(method=='raw2') return equipValue-value;
-								return Math.max(0.1,equipValue-value);
-							},
-						},
-						tag:{
-							valueswap:1,
-						},
-						result:{
-							// target:(player,target,card)=>get.equipResult(player,target,card.name),
-							target:(player,target,card)=>{return 9999},
-						},
-					},
-					skills:["zhuge_skill"],
-					enable:true,
-					selectTarget:-1,
-					filterTarget:(card,player,target)=>player==target&&target.canEquip(card,true),
-					modTarget:true,
-					allowMultiple:false,
-					content:function(){
-						if(cards.length&&get.position(cards[0],true)=='o') target.equip(cards[0]);
-					},
-					toself:true,
-				}
-			}
+			// 					// if(player.storage._miao_equip_love && player.storage._miao_equip_love['zhuge']){
+			// 					// 	return Infinity;
+			// 					// }
+			// 					if(!player.getCards('e').contains(card)&&!player.canEquip(card,true)) return 0.01;
+			// 					const info=get.info(card),current=player.getEquip(info.subtype),value=current&&card!=current&&get.value(current,player);
+			// 					let equipValue=info.ai.equipValue||info.ai.basic.equipValue;
+			// 					if(typeof equipValue=='function'){
+			// 						if(method=='raw')return equipValue(card,player);
+			// 						if(method=='raw2')return equipValue(card,player)-value;
+			// 						return Math.max(0.1,equipValue(card,player)-value);
+			// 					}
+			// 					if(typeof equipValue!='number') equipValue=0;
+			// 					if(method=='raw') return equipValue;
+			// 					if(method=='raw2') return equipValue-value;
+			// 					return Math.max(0.1,equipValue-value);
+			// 				},
+			// 			},
+			// 			tag:{
+			// 				valueswap:1,
+			// 			},
+			// 			result:{
+			// 				// target:(player,target,card)=>get.equipResult(player,target,card.name),
+			// 				target:(player,target,card)=>{return 9999},
+			// 			},
+			// 		},
+			// 		skills:["zhuge_skill"],
+			// 		enable:true,
+			// 		selectTarget:-1,
+			// 		filterTarget:(card,player,target)=>player==target&&target.canEquip(card,true),
+			// 		modTarget:true,
+			// 		allowMultiple:false,
+			// 		content:function(){
+			// 			if(cards.length&&get.position(cards[0],true)=='o') target.equip(cards[0]);
+			// 		},
+			// 		toself:true,
+			// 	}
+			// }
 
-
+			// alert(lib.config.extension_喵喵配件_nodeintroFix)
 			//四字适配
 			if (lib.config.extension_喵喵配件_nodeintroFix) {
-				setTimeout(()=>{
+				// alert()
 				get.nodeintro = function (node, simple, evt) {
 					var uiintro = ui.create.dialog("hidden", "notouchscroll");
 					if (node.classList.contains("player") && !node.name) {
@@ -1764,8 +1767,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						lib.setScroll(uiintro.contentContainer);
 					}
 					return uiintro;
-				}},1)
+				}
 			}
+			// pn33()
 		},
 		precontent: function () {},
 		help: {},
@@ -1782,11 +1786,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				init: true
 			},
 
-			// player_number_33: {
-			// 	name: "人数上限修改",
-			// 	intro: "开启此选项可将人数上限修改为33人",
-			// 	init: true
-			// },
+			player_number_33: {
+				name: "人数上限修改",
+				intro: "开启此选项可将人数上限修改为33人",
+				init: true
+			},
 
 			//存在风险
 
