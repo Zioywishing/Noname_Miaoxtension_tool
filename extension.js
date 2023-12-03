@@ -458,7 +458,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				// setTimeout(()=>{
 					Object.defineProperty(lib.mode.identity.config.player_number, "item", {
 						get: function () {
-							const minimumNumberOfPlayers=2,maximumNumberOfPlayers=Math.max(_status.maximumNumberOfPlayers||10,minimumNumberOfPlayers,33),item={};
+							const minimumNumberOfPlayers=2,maximumNumberOfPlayers=Math.max(_status.maximumNumberOfPlayers||40,minimumNumberOfPlayers),item={};
 							for(let playerNumber=minimumNumberOfPlayers;playerNumber<=maximumNumberOfPlayers;playerNumber++){
 								item[playerNumber]=`${get.cnNumber(playerNumber)}人`;
 							}
