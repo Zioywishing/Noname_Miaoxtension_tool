@@ -451,6 +451,22 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			// 		}
 			// 	}
 			// }
+
+
+			if(lib.config.extension_喵喵配件_player_number_33){
+				setTimeout(()=>{
+					Object.defineProperty(lib.mode.identity.config.player_number, "item", {
+						get: function () {
+							const minimumNumberOfPlayers=2,maximumNumberOfPlayers=Math.max(_status.maximumNumberOfPlayers||10,minimumNumberOfPlayers,33),item={};
+							for(let playerNumber=minimumNumberOfPlayers;playerNumber<=maximumNumberOfPlayers;playerNumber++){
+								item[playerNumber]=`${get.cnNumber(playerNumber)}人`;
+							}
+							return item;
+						},
+					});
+				},1000)
+			}
+			
 			
 			miao_nodelay = function(){
 				lib.configMenu.general.config.game_speed = {
@@ -631,6 +647,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 			//四字适配
 			if (lib.config.extension_喵喵配件_nodeintroFix) {
+				setTimeout(()=>{
 				get.nodeintro = function (node, simple, evt) {
 					var uiintro = ui.create.dialog("hidden", "notouchscroll");
 					if (node.classList.contains("player") && !node.name) {
@@ -777,7 +794,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											"】：" +
 											get.skillInfoTranslation(skills[i]).replace(/<br>/gm, "<br>&ensp;&ensp;&ensp;&ensp;") +
 											"</div>" +
-											'<div class="text center"><div><div class="underlinenode on gray" style="position:relative;padding-top:7px">>>>>自动发动<<<<</div></div></div>'
+											'<div class="text center"><div><div class="underlinenode on gray" style="position:relative;padding-top:7px;width:100%">>>>>自动发动<<<<</div></div></div>'
 									);
 									var underlinenode = uiintro.content.lastChild.querySelector(".underlinenode");
 									if (lib.skill[skills[i]].frequent) {
@@ -1745,7 +1762,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						lib.setScroll(uiintro.contentContainer);
 					}
 					return uiintro;
-				};
+				}},1000)
 			}
 		},
 		precontent: function () {},
@@ -1759,6 +1776,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			nodeintroFix: {
 				name: "get.nodeintro修正",
 				intro: "开启此选项可正确显示超过2个字的技能名称。仅测试了军八环境",
+				init: true
+			},
+			player_number_33: {
+				name: "人数上限修改",
+				intro: "开启此选项可将人数上限修改为33人",
 				init: true
 			},
 
