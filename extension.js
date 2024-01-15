@@ -469,7 +469,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			}
 			
 			
-			miao_nodelay = function(){
+			var miao_nodelay = function(){
 				lib.configMenu.general.config.game_speed = {
 					name: "游戏速度",
 					init: "nodelay",
@@ -486,20 +486,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				};
 				//覆写十周年ui与被十周年ui覆写的delay,等1s加载完以后覆写
 				setTimeout(()=>{
-					if(decadeUI){
-						decadeUI.delay = num =>{}
-						dui.delay = num =>{}
-						game.delay = function (time, time2) {
-							if (_status.paused) return;
-							game.pause();
-							if (typeof time != "number") time = 1;
-							if (typeof time2 != "number") time2 = 0;
-							time = time * lib.config.duration + time2;
-							if (lib.config.game_speed == "vvfast") time /= 3;
-							if (lib.config.game_speed == "nodelay"){ time = 1}
-							_status.timeout = setTimeout(game.resume, time);
-						}
-					};
+					try{
+						if(decadeUI){
+							decadeUI.delay = num =>{}
+							dui.delay = num =>{}
+							game.delay = function (time, time2) {
+								if (_status.paused) return;
+								game.pause();
+								if (typeof time != "number") time = 1;
+								if (typeof time2 != "number") time2 = 0;
+								time = time * lib.config.duration + time2;
+								if (lib.config.game_speed == "vvfast") time /= 3;
+								if (lib.config.game_speed == "nodelay"){ time = 1}
+								_status.timeout = setTimeout(game.resume, time);
+							}
+						};
+					}catch(e){
+						console.log(e)
+					}
 				},1000)
 
 				
