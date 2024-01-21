@@ -10,6 +10,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			let myAbortController;
 			/** @type { AbortSignal | undefined } */
 			let signal = undefined;
+			var myHeaders = new Headers();
+			myHeaders.append('pragma', 'no-cache');
+			myHeaders.append('cache-control', 'no-cache');
+
+			var myInit = {
+			method: 'GET',
+			headers: myHeaders,
+			};
 
 			if (typeof window.AbortController == "function") {
 				if (options.timeout > 0) {
@@ -22,7 +30,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				console.warn("设备不支持AbortController");
 			}
 
-			fetch(url, { signal })
+			fetch(url, myInit)
 				.then(response => {
 					if (!response.ok) {
 						return reject(response);
@@ -652,6 +660,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			// 		toself:true,
 			// 	}
 			// }
+
+			if(false||1){
+				let gameLogBak = game.log
+				game.logCount = 1
+				game.log = function(...args){
+					gameLogBak(game.logCount++,'. ',...args)
+				}
+			}
 
 			// alert(lib.config.extension_喵喵配件_nodeintroFix)
 			//四字适配
@@ -1902,7 +1918,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				onclick: async function () {
 					// 本地img
 					game.getFileList("extension/喵喵喵喵",(fold,files)=>{
-						img_map = {}
+						var img_map = {}
 						// 扩展包需求img
 						for(var i in lib.characterPack['mode_extension_喵喵喵喵']){
 							var p = lib.characterPack['mode_extension_喵喵喵喵'][i]
