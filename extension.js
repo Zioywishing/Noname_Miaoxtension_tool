@@ -1945,6 +1945,134 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				clear: true
 			},
 
+			
+			line1456343453: {
+				name: "------------------",
+				clear: true
+			},
+			updateSup1: {
+				name: "<button>更新超界突破</button>",
+				intro: "更新超界突破",
+				clear: true,
+				onclick: async function () {
+					if (!game.getExtensionConfig("超界突破", "enable")) {
+						alert("未安装超界突破拓展");
+						return;
+					}
+					if (this.innerHTML != "<span><button>更新超界突破</button></span>") {
+						return alert("已经在更新了");
+					}
+					this.innerHTML = "<button>更新中</button>";
+					var url = "http://git.miaospring.top:3000/539943419/noname_miaomiao/raw/branch/sup/extension.js";
+					var extName = "超界突破";
+					miao_update_extension_js(url,extName)
+					this.innerHTML = "<span><button>更新超界突破</button></span>";
+				}
+			},
+
+			line65464485646: {
+				name: "------------",
+				clear: true
+			},
+			
+			updateSup1Img: {
+				name: "<button>更新超界突破图片素材</button>",
+				intro: "通过遍历所有武将的头像列表和目录下的文件对比，自动下载缺失的图像素材",
+				clear: true,
+				onclick: async function () {
+					// 本地img
+					game.getFileList("extension/超界突破",(fold,files)=>{
+						var img_map = {}
+						// 扩展包需求img
+						for(var i in lib.characterPack['mode_extension_超界突破']){
+							var p = lib.characterPack['mode_extension_超界突破'][i]
+							// game.log(p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1])
+							img_map[p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1]] = false
+						}
+
+						for(var i of files){
+							// game.log(i)
+							if(img_map[i] === false)img_map[i] = true;
+						}
+
+						for(var i in img_map){
+							if(!img_map[i]){
+								miao_download("http://git.miaospring.top:3000/539943419/noname_miaomiao/raw/branch/sup/" + i,'超界突破',i)
+							}
+						}
+					},()=>{alert('失败')})
+				}
+			},
+
+			line4554451234574: {
+				name: "------------",
+				clear: true
+			},
+
+			
+			line14641234: {
+				name: "------------------",
+				clear: true
+			},
+			updateSup2: {
+				name: "<button>更新超界Ⅱ期</button>",
+				intro: "更新超界Ⅱ期",
+				clear: true,
+				onclick: async function () {
+					if (!game.getExtensionConfig("超界Ⅱ期", "enable")) {
+						alert("未安装超界Ⅱ期拓展");
+						return;
+					}
+					if (this.innerHTML != "<span><button>更新超界Ⅱ期</button></span>") {
+						return alert("已经在更新了");
+					}
+					this.innerHTML = "<button>更新中</button>";
+					var url = "http://git.miaospring.top:3000/539943419/noname_miaomiao/raw/branch/sup2/extension.js";
+					var extName = "超界Ⅱ期";
+					miao_update_extension_js(url,extName)
+					this.innerHTML = "<span><button>更新超界Ⅱ期</button></span>";
+				}
+			},
+
+			line654645646424: {
+				name: "------------",
+				clear: true
+			},
+			
+			updateSup2Img: {
+				name: "<button>更新超界Ⅱ期图片素材</button>",
+				intro: "通过遍历所有武将的头像列表和目录下的文件对比，自动下载缺失的图像素材",
+				clear: true,
+				onclick: async function () {
+					// 本地img
+					game.getFileList("extension/超界Ⅱ期",(fold,files)=>{
+						var img_map = {}
+						// 扩展包需求img
+						for(var i in lib.characterPack['mode_extension_超界Ⅱ期']){
+							var p = lib.characterPack['mode_extension_超界Ⅱ期'][i]
+							// game.log(p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1])
+							img_map[p[4][p[4].length-2].split('/')[p[4][p[4].length-2].split('/').length-1]] = false
+						}
+
+						for(var i of files){
+							// game.log(i)
+							if(img_map[i] === false)img_map[i] = true;
+						}
+
+						for(var i in img_map){
+							if(!img_map[i]){
+								miao_download("http://git.miaospring.top:3000/539943419/noname_miaomiao/raw/branch/sup2/" + i,'超界Ⅱ期',i)
+							}
+						}
+					},()=>{alert('失败')})
+				}
+			},
+
+			line455441453574: {
+				name: "------------",
+				clear: true
+			},
+
 			updateSelf: {
 				name: "<button>更新喵喵配件</button>",
 				intro: "更新喵喵配件",
