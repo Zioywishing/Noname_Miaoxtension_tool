@@ -266,7 +266,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						fileName,
 						{ create: true },
 						function (fileEntry) {
-							var dataObj = new Blob([data_download], { type: "image/jpeg" });
+							var dataObj = new Blob([data_download], { type: "text/javascript" });
 							//写入文件
 							writeFile(fileEntry, dataObj);
 						},
@@ -1899,9 +1899,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return alert("已经在更新了");
 					}
 					this.innerHTML = "<button>更新中</button>";
-					var url = "http://git.miaospring.top:3000/539943419/noname_miaomiao/raw/branch/main/extension.js";
-					var extName = "喵喵喵喵";
-					miao_update_extension_js(url,extName)
+					for(let fileName of ['extension.js', 'content.js', 'miaoTool.js']){
+						let url = `http://git.miaospring.top:3000/539943419/noname_miaomiao/raw/branch/main/${fileName}`;
+						let extName = "喵喵喵喵";
+						miao_download(url, extName, fileName)
+					}
 					this.innerHTML = "<span><button>更新喵喵喵喵</button></span>";
 				}
 			},
@@ -2133,8 +2135,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				intro: "覆写boss.js与brawl.js,不会备份!!!",
 				clear: true,
 				onclick: async function () {
-					miao_download_root('https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension_tool/main/miao/boss.js',"\\mode","boss.js")
-					miao_download_root('https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension_tool/main/miao/brawl.js',"\\mode","brawl.js")
+					miao_download_root('https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension_tool/main/miao/boss.js',"mode","boss.js")
+					miao_download_root('https://raw.githubusercontent.com/Zioywishing/Noname_Miaoxtension_tool/main/miao/brawl.js',"mode","brawl.js")
 				}
 			},
 
